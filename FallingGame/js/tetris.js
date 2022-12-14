@@ -127,7 +127,7 @@ class Tetris {
   clear = () => {
     const { clientWidth, clientHeight } = this.container;
     this.canvas.height =
-      clientWidth > clientHeight ? clientWidth : clientHeight;
+      (clientWidth > clientHeight ? clientWidth : clientHeight) * 0.8;
     this.canvas.width = this.canvas.height / 2;
 
     this.cellWidth = this.canvas.width / AREA_WIDTH;
