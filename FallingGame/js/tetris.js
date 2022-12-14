@@ -103,12 +103,12 @@ let tetris;
 
 window.onload = () => {
   tetris = new Tetris();
-  tetris.init();
+  tetris.clear();
   tetris.start();
 };
 
 window.onresize = () => {
-  tetris.init();
+  tetris.clear();
 };
 
 class Tetris {
@@ -124,16 +124,15 @@ class Tetris {
     this.appStarted = false;
   }
 
-  init = () => {
-    this.canvas.height = this.container.clientHeight;
+  clear = () => {
+    const { clientWidth, clientHeight } = this.container;
+    this.canvas.height =
+      clientWidth > clientHeight ? clientWidth : clientHeight;
     this.canvas.width = this.canvas.height / 2;
+
     this.cellWidth = this.canvas.width / AREA_WIDTH;
     this.cellHeight = this.canvas.height / AREA_HEIGHT;
 
-    this.clear();
-  };
-
-  clear = () => {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   };
 
@@ -155,6 +154,12 @@ class Tetris {
 
     // タッチ終了時： スワイプした距離から左右どちらにスワイプしたかを判定する/距離が短い場合何もしない
     this.container.addEventListener("touchend", (e) => {
+      this.clear();
+      this.renderBoard();
+      if (this.currentTet == null) {
+        return;
+      }
+
       const touchEndX = e.changedTouches[0].pageX;
       const touchEndY = e.changedTouches[0].pageY;
 
@@ -214,8 +219,6 @@ class Tetris {
           this.rotate();
           break;
       }
-
-      this.renderCurrentTet();
     };
 
     // 落下スタート
@@ -310,6 +313,7 @@ class Tetris {
     if (this.canMove(currentTet, -1, 0)) {
       this.currentTet.setOffset(currentTet.offsetX - 1, currentTet.offsetY);
     }
+    this.renderCurrentTet();
   };
 
   moveRight = () => {
@@ -317,6 +321,7 @@ class Tetris {
     if (this.canMove(currentTet, 1, 0)) {
       this.currentTet.setOffset(currentTet.offsetX + 1, currentTet.offsetY);
     }
+    this.renderCurrentTet();
   };
 
   moveDown = () => {
@@ -324,6 +329,7 @@ class Tetris {
     if (this.canMove(currentTet, 0, 1)) {
       this.currentTet.setOffset(currentTet.offsetX, currentTet.offsetY + 1);
     }
+    this.renderCurrentTet();
   };
 
   rotate = () => {
@@ -332,6 +338,7 @@ class Tetris {
     if (this.canMove(clone, 0, 0)) {
       this.currentTet.rotate();
     }
+    this.renderCurrentTet();
   };
 
   checkLine = () => {
