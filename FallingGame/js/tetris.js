@@ -127,7 +127,7 @@ class Tetris {
   clear = () => {
     const { clientWidth, clientHeight } = this.container;
     this.canvas.height =
-      (clientWidth > clientHeight ? clientWidth : clientHeight) * 0.8;
+      clientWidth > clientHeight ? clientWidth : clientHeight;
     this.canvas.width = this.canvas.height / 2;
 
     this.cellWidth = this.canvas.width / AREA_WIDTH;
@@ -139,6 +139,8 @@ class Tetris {
   start = () => {
     this.container.onclick = () => {
       this.container.onclick = null;
+      const startText = document.getElementById("start-text");
+      startText.style.display = "none";
       this.startFall();
     };
   };
